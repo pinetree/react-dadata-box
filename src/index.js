@@ -5,6 +5,12 @@ import './index.css';
 
 const wordsToPass = ['г', 'респ', 'ул', 'р-н', 'село', 'деревня', 'поселок', 'пр-д', 'пл', 'к', 'кв', 'обл', 'д'];
 
+const defaultSuggestion = {
+  data: {},
+  unrestricted_value: '',
+  value: ''
+};
+
 const getHighlightWords = query => {
   const words = query.replace(',', '').split(' ');
   const filteredWords = words.filter(word => wordsToPass.indexOf(word) < 0);
@@ -81,6 +87,8 @@ class ReactDadata extends React.Component {
     this.setState({ query: value, showSuggestions: true }, () => {
       this.fetchSuggestions();
     });
+
+    !value && this.props.onChange && this.props.onChange(defaultSuggestion);
   };
 
   onKeyPress = event => {
@@ -201,7 +209,7 @@ ReactDadata.propTypes = {
   query: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.string),
   token: PropTypes.string.isRequired,
-  type: PropTypes.string,
+  type: PropTypes.string
 };
 
 export default ReactDadata;
