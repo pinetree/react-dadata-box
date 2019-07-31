@@ -20,7 +20,13 @@ class App extends Component {
             this.setState({ value: e.target.value });
           }}
         />
-        <ReactDadataBox className="data" token={token} placeholder="Адрес" type="address" query={this.state.value} />
+        <ReactDadataBox
+          className="data"
+          token={token}
+          placeholder="Адрес"
+          type="address"
+          query={this.state.value}
+          allowClear />
         <ReactDadataBox className="data" token={token} placeholder="Организация" type="party" />
         <ReactDadataBox className="data" token={token} placeholder="Банк" type="bank" />
         <ReactDadataBox className="data" token={token} placeholder="Email" type="email" />
