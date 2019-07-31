@@ -88,7 +88,7 @@ class ReactDadata extends React.Component {
       this.fetchSuggestions();
     });
 
-    !value && this.props.onChange && this.props.onChange(defaultSuggestion);
+    !value && this.clear()
   };
 
   onKeyPress = event => {
@@ -151,6 +151,14 @@ class ReactDadata extends React.Component {
     this.selectSuggestion(index);
   };
 
+  clear = () => {
+    this.setState({
+      query: '',
+      showSuggestions: false
+    });
+    this.props.onChange && this.props.onChange(defaultSuggestion);
+  }
+
   selectSuggestion = (index, showSuggestions = false) => {
     const { suggestions } = this.state;
 
@@ -167,14 +175,15 @@ class ReactDadata extends React.Component {
 
   render() {
     const { suggestionIndex, query, inputFocused, suggestions, showSuggestions, type } = this.state;
+    const { placeholder, autocomplete, styles, allowClear, className } =  this.props;
 
     const showSuggestionsList = inputFocused && showSuggestions && !!suggestions.length;
 
     return (
-      <div className={`react-dadata react-dadata__container ${this.props.className}`} style={this.props.styles}>
+      <div className={`react-dadata react-dadata__container ${className}`} style={styles}>
         <input
           className="react-dadata__input"
-          placeholder={this.props.placeholder || ''}
+          placeholder={placeholder || ''}
           value={query}
           ref={input => {
             this.textInput = input;
@@ -183,8 +192,15 @@ class ReactDadata extends React.Component {
           onKeyDown={this.onKeyPress}
           onFocus={this.onInputFocus}
           onBlur={this.onInputBlur}
-          autoComplete={this.props.autocomplete || 'off'}
+          autoComplete={autocomplete || 'off'}
         />
+        {
+          allowClear &&
+          query &&
+          <span className="react-dadata__input-suffix" onClick={this.clear}>
+            <i className="react-dadata__icon clear" />
+          </span>
+        }
         {showSuggestionsList && (
           <SuggestionsList
             suggestions={suggestions}
@@ -209,7 +225,8 @@ ReactDadata.propTypes = {
   query: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.string),
   token: PropTypes.string.isRequired,
-  type: PropTypes.string
+  type: PropTypes.string,
+  allowClear: PropTypes.bool
 };
 
 export default ReactDadata;

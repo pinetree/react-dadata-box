@@ -25,7 +25,9 @@ class App extends Component {
           type="address"
           query={this.state.value}
           onChange={this.handleChange}
+          allowClear
         />
+        <ReactDadataBox className="data" token={token} placeholder="Адрес" type="address" query={this.state.value} />
         <ReactDadataBox className="data" token={token} placeholder="Организация" type="party" />
         <ReactDadataBox className="data" token={token} placeholder="Банк" type="bank" />
         <ReactDadataBox className="data" token={token} placeholder="Email" type="email" />
