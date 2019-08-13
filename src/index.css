@@ -1,6 +1,13 @@
 .react-dadata__container {
+  display: flex;
+  align-items: center;
+  justify-items: center;
   position: relative;
   font-family: sans-serif;
+}
+
+.react-dadata__label {
+  padding-right: 10px;
 }
 
 .react-dadata__input {

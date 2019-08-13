@@ -14,7 +14,6 @@ class App extends Component {
   handleType = e => this.setState({ query: e.target.value });
 
   handleChange = data => {
-    console.log(data);
     this.setState({
       query: data ? data.value : this.state.query,
       result: data
@@ -24,22 +23,29 @@ class App extends Component {
   render() {
     const { data } = this.state.result;
 
-    console.log('aa', data);
     return (
-      <div>
-        <div>
+      <>
+        <div id="left">
           <h3>Пример ввода в другой input:</h3>
           <input placeholder="адрес" value={this.state.query} onChange={this.handleType} />
-          <div>
-            Response:
-            {data && JSON.stringify(data)}
-          </div>
+          <pre>
+            <strong>Response:</strong>
+            <br />
+            <code>
+              {data &&
+                JSON.stringify(data)
+                  .split(',')
+                  .join('\n')}
+            </code>
+          </pre>
         </div>
 
-        <ol>
+        <ol id="right">
           <li>
             <h1>Все населённые пункты мира</h1>
             <ReactDadataBox
+              name="country"
+              label="Город"
               className="data"
               token={token}
               placeholder="Город или населенный пункт в любой стране мира"
@@ -55,14 +61,95 @@ class App extends Component {
               allowClear
             />
           </li>
-        </ol>
 
-        <ReactDadataBox className="data" token={token} placeholder="Организация" type="party" />
-        <ReactDadataBox className="data" token={token} placeholder="Банк" type="bank" />
-        <ReactDadataBox className="data" token={token} placeholder="Email" type="email" />
-        <ReactDadataBox className="data" token={token} placeholder="ФИО" type="fio" />
-        <ReactDadataBox className="data" token={token} placeholder="Город" type="address" city={true} />
-      </div>
+          <li>
+            <h1>Все страны мира</h1>
+            <ReactDadataBox
+              className="data"
+              token={token}
+              placeholder="Страна"
+              type="country"
+              onChange={this.handleChange}
+              allowClear
+            />
+          </li>
+
+          <li>
+            <h1>Все области внутри выбранной страны</h1>
+            <ReactDadataBox
+              className="data"
+              token={token}
+              placeholder="Области внутри России"
+              type="address"
+              constraints={{
+                locations: [{ country: 'Россия' }],
+                from_bound: { value: 'region' },
+                to_bound: { value: 'region' }
+              }}
+              onChange={this.handleChange}
+              dataExtract={'region_with_type'}
+              allowClear
+            />
+          </li>
+
+          <li>
+            <h1>Все районы внутри выбранной области/региона</h1>
+            <ReactDadataBox
+              className="data"
+              token={token}
+              placeholder="Районы Московской области"
+              type="address"
+              constraints={{
+                locations: [{ country: 'Россия', region: 'Московская' }],
+                from_bound: { value: 'area' },
+                to_bound: { value: 'area' }
+              }}
+              onChange={this.handleChange}
+              dataExtract={'area_with_type'}
+              allowClear
+            />
+          </li>
+
+          <li>
+            <h1>Все населенные пункты внутри выбранного района</h1>
+            <ReactDadataBox
+              className="data"
+              token={token}
+              placeholder="Нас.пункты внутри Пушкинского р-на Московсковской обл"
+              type="address"
+              constraints={{
+                locations: [{ country: 'Россия', region: 'Московская', area: 'Пушкинский' }],
+                from_bound: { value: 'city' },
+                to_bound: { value: 'settlement' }
+              }}
+              onChange={this.handleChange}
+              dataExtract={({ city, settlement_with_type }) => city || settlement_with_type}
+              allowClear
+            />
+          </li>
+
+          <li>
+            <h1>Адрес, до номера дома</h1>
+            <ReactDadataBox
+              className="data"
+              token={token}
+              placeholder="Адрес, до номера дома"
+              type="address"
+              onChange={this.handleChange}
+              allowClear
+            />
+          </li>
+
+          <li>
+            <h1>Прочее</h1>
+            <ReactDadataBox className="data" token={token} placeholder="Организация" type="party" />
+            <ReactDadataBox className="data" token={token} placeholder="Банк" type="bank" />
+            <ReactDadataBox className="data" token={token} placeholder="Email" type="email" />
+            <ReactDadataBox className="data" token={token} placeholder="ФИО" type="fio" />
+            <ReactDadataBox className="data" token={token} placeholder="Город" type="address" city={true} />
+          </li>
+        </ol>
+      </>
     );
   }
 }

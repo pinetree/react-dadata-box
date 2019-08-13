@@ -88,7 +88,7 @@ class ReactDadata extends React.Component {
       this.fetchSuggestions();
     });
 
-    !value && this.clear()
+    !value && this.clear();
   };
 
   onKeyPress = event => {
@@ -121,7 +121,7 @@ class ReactDadata extends React.Component {
       ...constraints
     };
 
-    // TODO: mark prop `city` as deprecated
+    // TODO: change this prop behavior later
     if (city && type === 'address') {
       payload.from_bound = { value: 'city' };
       payload.to_bound = { value: 'settlement' };
@@ -159,31 +159,55 @@ class ReactDadata extends React.Component {
       showSuggestions: false
     });
     this.props.onChange && this.props.onChange(defaultSuggestion);
-  }
+  };
+
+  extract = suggestion => {
+    const { dataExtract } = this.props;
+
+    if (!dataExtract || !suggestion) return suggestion;
+
+    const { data } = suggestion;
+
+    if (!data) return suggestion;
+    else if (dataExtract instanceof Function) {
+      return {
+        ...suggestion,
+        value: dataExtract(data)
+      };
+    } else if (typeof dataExtract === 'string' && dataExtract) {
+      return {
+        ...suggestion,
+        value: data[dataExtract]
+      };
+    }
+  };
 
   selectSuggestion = (index, showSuggestions = false) => {
     const { suggestions } = this.state;
+    const suggestion = this.extract(suggestions[index]);
+    const { value } = suggestion;
 
-    const { value } = suggestions[index];
     this.setState({
       query: value,
       showSuggestions: showSuggestions
     });
 
     if (this.props.onChange) {
-      this.props.onChange(suggestions[index]);
+      this.props.onChange(suggestion);
     }
   };
 
   render() {
     const { suggestionIndex, query, inputFocused, suggestions, showSuggestions, type } = this.state;
-    const { placeholder, autocomplete, styles, allowClear, className } =  this.props;
+    const { placeholder, autocomplete, styles, allowClear, className, name, label } = this.props;
 
     const showSuggestionsList = inputFocused && showSuggestions && !!suggestions.length;
 
     return (
       <div className={`react-dadata react-dadata__container ${className}`} style={styles}>
+        { label && <label className="react-dadata__label" htmlFor={name}>{label}</label> }
         <input
+          name={name}
           className={`react-dadata__input${allowClear ? ' react-dadata__input-clearable' : ''}`}
           placeholder={placeholder || ''}
           value={query}
@@ -196,13 +220,11 @@ class ReactDadata extends React.Component {
           onBlur={this.onInputBlur}
           autoComplete={autocomplete || 'off'}
         />
-        {
-          allowClear &&
-          query &&
+        {allowClear && query && (
           <span className="react-dadata__input-suffix" onClick={this.clear}>
             <i className="react-dadata__icon react-dadata__icon-clear" />
           </span>
-        }
+        )}
         {showSuggestionsList && (
           <SuggestionsList
             suggestions={suggestions}
@@ -229,7 +251,10 @@ ReactDadata.propTypes = {
   token: PropTypes.string.isRequired,
   type: PropTypes.string,
   allowClear: PropTypes.bool,
-  constraints: PropTypes.object
+  constraints: PropTypes.object,
+  dataExtract: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  name: PropTypes.string,
+  label: PropTypes.string
 };
 
 export default ReactDadata;

@@ -1,3 +1,33 @@
+#root {
+  display: grid;
+  grid-template-areas: 'left right';
+  grid-template-rows: 60px 1fr;
+  grid-template-columns: 20% 1fr;
+  grid-gap: 10px;
+  height: 100vh;
+  margin: 0;
+}
+
+#left {
+  grid-area: left;
+}
+
+#right {
+  grid-area: right;
+}
+
+#left pre {
+  width: 100%;
+  background-color: #eeeeee;
+  padding: 5px 10px;
+  overflow: scroll;
+  height: 100vh;
+}
+#left code {
+  white-space: pre;
+  word-break: normal;
+}
+
 .data {
-    margin-top: 20px;
+  margin-top: 20px;
 }
