@@ -1,0 +1,7 @@
+.idea
+.vscode
+src
+examples
+.gitignore
+webpack.config.js
+node_modules
