@@ -205,7 +205,6 @@ class ReactDadata extends React.Component {
 
     return (
       <div className={`react-dadata react-dadata__container ${className}`} style={styles}>
-        { label && <label className="react-dadata__label" htmlFor={name}>{label}</label> }
         <input
           name={name}
           className={`react-dadata__input${allowClear ? ' react-dadata__input-clearable' : ''}`}
@@ -233,6 +232,11 @@ class ReactDadata extends React.Component {
             type={type}
             onSuggestionClick={this.onSuggestionClick}
           />
+        )}
+        {label && (
+          <label className="react-dadata__label" htmlFor={name}>
+            {label}
+          </label>
         )}
       </div>
     );

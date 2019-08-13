@@ -319,10 +319,8 @@ function (_React$Component) {
       return React.createElement("div", {
         className: "react-dadata react-dadata__container ".concat(className),
         style: styles
-      }, label && React.createElement("label", {
-        className: "react-dadata__label",
-        htmlFor: name
-      }, label), React.createElement("input", {
+      }, React.createElement("input", {
+        name: name,
         className: "react-dadata__input".concat(allowClear ? ' react-dadata__input-clearable' : ''),
         placeholder: placeholder || '',
         value: query,
@@ -345,7 +343,10 @@ function (_React$Component) {
         query: query,
         type: type,
         onSuggestionClick: this.onSuggestionClick
-      }));
+      }), label && React.createElement("label", {
+        className: "react-dadata__label",
+        htmlFor: name
+      }, label));
     }
   }]);
 
