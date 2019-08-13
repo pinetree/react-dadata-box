@@ -113,13 +113,15 @@ class ReactDadata extends React.Component {
     this.xhr.abort();
 
     const { type } = this.state;
-    const { city } = this.props;
+    const { city, constraints } = this.props;
 
     const payload = {
       query: this.state.query,
-      count: this.props.count || 10
+      count: this.props.count || 10,
+      ...constraints
     };
 
+    // TODO: mark prop `city` as deprecated
     if (city && type === 'address') {
       payload.from_bound = { value: 'city' };
       payload.to_bound = { value: 'settlement' };
@@ -226,7 +228,8 @@ ReactDadata.propTypes = {
   style: PropTypes.objectOf(PropTypes.string),
   token: PropTypes.string.isRequired,
   type: PropTypes.string,
-  allowClear: PropTypes.bool
+  allowClear: PropTypes.bool,
+  constraints: PropTypes.object
 };
 
 export default ReactDadata;
