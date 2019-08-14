@@ -55,14 +55,14 @@ class ReactDadata extends React.Component {
     showSuggestions: true,
     suggestions: [],
     suggestionIndex: 0,
-    isValid: false
+    isValid: this.props.query && !this.props.fetchOnMount
   };
 
   textInput = React.createRef();
   xhr = new XMLHttpRequest();
 
   componentDidMount = () => {
-    if (this.props.query) {
+    if (this.props.query && this.props.fetchOnMount) {
       this.fetchSuggestions();
     }
   };
@@ -272,12 +272,14 @@ ReactDadata.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   clearOnBlur: PropTypes.bool,
-  allowCustomValue: PropTypes.bool
+  allowCustomValue: PropTypes.bool,
+  fetchOnMount: PropTypes.bool
 };
 
 ReactDadata.defaultProps = {
   clearOnBlur: false,
-  allowCustomValue: false
+  allowCustomValue: false,
+  fetchOnMount: false
 };
 
 export default ReactDadata;

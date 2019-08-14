@@ -119,7 +119,7 @@ function (_React$Component) {
       showSuggestions: true,
       suggestions: [],
       suggestionIndex: 0,
-      isValid: false
+      isValid: _this.props.query && !_this.props.fetchOnMount
     });
 
     _defineProperty(_assertThisInitialized(_this), "textInput", React.createRef());
@@ -127,7 +127,7 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_this), "xhr", new XMLHttpRequest());
 
     _defineProperty(_assertThisInitialized(_this), "componentDidMount", function () {
-      if (_this.props.query) {
+      if (_this.props.query && _this.props.fetchOnMount) {
         _this.fetchSuggestions();
       }
     });
@@ -388,11 +388,13 @@ ReactDadata.propTypes = {
   name: _propTypes["default"].string,
   label: _propTypes["default"].string,
   clearOnBlur: _propTypes["default"].bool,
-  allowCustomValue: _propTypes["default"].bool
+  allowCustomValue: _propTypes["default"].bool,
+  fetchOnMount: _propTypes["default"].bool
 };
 ReactDadata.defaultProps = {
   clearOnBlur: false,
-  allowCustomValue: false
+  allowCustomValue: false,
+  fetchOnMount: false
 };
 var _default = ReactDadata;
 exports["default"] = _default;
