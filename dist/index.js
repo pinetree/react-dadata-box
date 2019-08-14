@@ -341,7 +341,7 @@ function (_React$Component) {
         name: name,
         className: "react-dadata__input".concat(allowClear ? ' react-dadata__input-clearable' : ''),
         placeholder: placeholder || '',
-        value: query,
+        value: query || '',
         ref: function ref(input) {
           _this2.textInput = input;
         },
@@ -372,7 +372,7 @@ function (_React$Component) {
 }(React.Component);
 
 ReactDadata.propTypes = {
-  autocomplete: _propTypes["default"].bool,
+  autocomplete: _propTypes["default"].oneOfType([_propTypes["default"].bool, _propTypes["default"].string]),
   city: _propTypes["default"].bool,
   className: _propTypes["default"].string,
   count: _propTypes["default"].number,

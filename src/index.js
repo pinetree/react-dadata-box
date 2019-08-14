@@ -221,7 +221,7 @@ class ReactDadata extends React.Component {
           name={name}
           className={`react-dadata__input${allowClear ? ' react-dadata__input-clearable' : ''}`}
           placeholder={placeholder || ''}
-          value={query}
+          value={query || ''}
           ref={input => {
             this.textInput = input;
           }}
@@ -256,7 +256,7 @@ class ReactDadata extends React.Component {
 }
 
 ReactDadata.propTypes = {
-  autocomplete: PropTypes.bool,
+  autocomplete: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   city: PropTypes.bool,
   className: PropTypes.string,
   count: PropTypes.number,
