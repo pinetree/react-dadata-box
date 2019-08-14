@@ -68,7 +68,7 @@ class ReactDadata extends React.Component {
   };
 
   componentDidUpdate = prevProps => {
-    if (this.props.query !== prevProps.query) {
+    if (this.props.query !== prevProps.query && this.props.query !== '') {
       this.setState({ query: this.props.query }, this.fetchSuggestions);
     }
   };
@@ -77,18 +77,26 @@ class ReactDadata extends React.Component {
     this.setState({ inputFocused: true });
   };
 
-  onInputBlur = () => {
+  onInputBlur = event => {
+    const { isValid } = this.state;
+    const { value } = event.target;
+
+    if (!isValid) {
+      if (this.props.allowCustomValue) this.props.onChange && this.props.onChange({ ...defaultSuggestion, value });
+      else if (this.props.clearOnBlur) this.clear();
+    }
+
     this.setState({ inputFocused: false });
   };
 
   onInputChange = event => {
     const { value } = event.target;
 
-    this.setState({ query: value, showSuggestions: true }, () => {
+    if (!value) return this.clear();
+
+    this.setState({ query: value, showSuggestions: true, isValid: false }, () => {
       this.fetchSuggestions();
     });
-
-    !value && this.clear();
   };
 
   onKeyPress = event => {
@@ -156,7 +164,8 @@ class ReactDadata extends React.Component {
   clear = () => {
     this.setState({
       query: '',
-      showSuggestions: false
+      showSuggestions: false,
+      isValid: false
     });
     this.props.onChange && this.props.onChange(defaultSuggestion);
   };
@@ -183,13 +192,16 @@ class ReactDadata extends React.Component {
   };
 
   selectSuggestion = (index, showSuggestions = false) => {
-    const { suggestions } = this.state;
+    const { suggestions, query } = this.state;
     const suggestion = this.extract(suggestions[index]);
-    const { value } = suggestion;
+    const { value } = suggestion || defaultSuggestion;
+
+    if (!value && this.props.allowCustomValue) return this.props.onChange({ ...defaultSuggestion, value: query });
 
     this.setState({
       query: value,
-      showSuggestions: showSuggestions
+      showSuggestions: showSuggestions,
+      isValid: !!value
     });
 
     if (this.props.onChange) {
@@ -258,7 +270,14 @@ ReactDadata.propTypes = {
   constraints: PropTypes.object,
   dataExtract: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   name: PropTypes.string,
-  label: PropTypes.string
+  label: PropTypes.string,
+  clearOnBlur: PropTypes.bool,
+  allowCustomValue: PropTypes.bool
+};
+
+ReactDadata.defaultProps = {
+  clearOnBlur: false,
+  allowCustomValue: false
 };
 
 export default ReactDadata;

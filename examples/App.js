@@ -21,7 +21,7 @@ class App extends Component {
   };
 
   render() {
-    const { data } = this.state.result;
+    const { data } = this.state.result || {};
 
     return (
       <>
@@ -137,6 +137,36 @@ class App extends Component {
               type="address"
               onChange={this.handleChange}
               allowClear
+            />
+          </li>
+
+          <li>
+            <h1>Все населённые пункты мира по индексу</h1>
+            <ReactDadataBox
+              name="index"
+              className="data"
+              token={token}
+              placeholder="Индекс"
+              type="address"
+              onChange={this.handleChange}
+              constraints={{
+                locations: [{ country: '*' }]
+              }}
+              allowClear
+            />
+          </li>
+
+          <li>
+            <h1>Допускается свой ввод (в ответе в value придет то, что набрано в input)</h1>
+            <ReactDadataBox
+              name="index"
+              className="data"
+              token={token}
+              placeholder="Произвольный индекс, который может быть не найден в Dadata базе"
+              type="address"
+              onChange={this.handleChange}
+              allowClear
+              allowInput
             />
           </li>
 

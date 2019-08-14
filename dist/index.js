@@ -133,7 +133,7 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "componentDidUpdate", function (prevProps) {
-      if (_this.props.query !== prevProps.query) {
+      if (_this.props.query !== prevProps.query && _this.props.query !== '') {
         _this.setState({
           query: _this.props.query
         }, _this.fetchSuggestions);
@@ -146,7 +146,16 @@ function (_React$Component) {
       });
     });
 
-    _defineProperty(_assertThisInitialized(_this), "onInputBlur", function () {
+    _defineProperty(_assertThisInitialized(_this), "onInputBlur", function (event) {
+      var isValid = _this.state.isValid;
+      var value = event.target.value;
+
+      if (!isValid) {
+        if (_this.props.allowCustomValue) _this.props.onChange && _this.props.onChange(_objectSpread({}, defaultSuggestion, {
+          value: value
+        }));else if (_this.props.clearOnBlur) _this.clear();
+      }
+
       _this.setState({
         inputFocused: false
       });
@@ -154,15 +163,15 @@ function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "onInputChange", function (event) {
       var value = event.target.value;
+      if (!value) return _this.clear();
 
       _this.setState({
         query: value,
-        showSuggestions: true
+        showSuggestions: true,
+        isValid: false
       }, function () {
         _this.fetchSuggestions();
       });
-
-      !value && _this.clear();
     });
 
     _defineProperty(_assertThisInitialized(_this), "onKeyPress", function (event) {
@@ -253,7 +262,8 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_this), "clear", function () {
       _this.setState({
         query: '',
-        showSuggestions: false
+        showSuggestions: false,
+        isValid: false
       });
 
       _this.props.onChange && _this.props.onChange(defaultSuggestion);
@@ -276,15 +286,23 @@ function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "selectSuggestion", function (index) {
       var showSuggestions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var suggestions = _this.state.suggestions;
+      var _this$state2 = _this.state,
+          suggestions = _this$state2.suggestions,
+          query = _this$state2.query;
 
       var suggestion = _this.extract(suggestions[index]);
 
-      var value = suggestion.value;
+      var _ref4 = suggestion || defaultSuggestion,
+          value = _ref4.value;
+
+      if (!value && _this.props.allowCustomValue) return _this.props.onChange(_objectSpread({}, defaultSuggestion, {
+        value: query
+      }));
 
       _this.setState({
         query: value,
-        showSuggestions: showSuggestions
+        showSuggestions: showSuggestions,
+        isValid: !!value
       });
 
       if (_this.props.onChange) {
@@ -300,13 +318,13 @@ function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _this$state2 = this.state,
-          suggestionIndex = _this$state2.suggestionIndex,
-          query = _this$state2.query,
-          inputFocused = _this$state2.inputFocused,
-          suggestions = _this$state2.suggestions,
-          showSuggestions = _this$state2.showSuggestions,
-          type = _this$state2.type;
+      var _this$state3 = this.state,
+          suggestionIndex = _this$state3.suggestionIndex,
+          query = _this$state3.query,
+          inputFocused = _this$state3.inputFocused,
+          suggestions = _this$state3.suggestions,
+          showSuggestions = _this$state3.showSuggestions,
+          type = _this$state3.type;
       var _this$props2 = this.props,
           placeholder = _this$props2.placeholder,
           autocomplete = _this$props2.autocomplete,
@@ -368,7 +386,13 @@ ReactDadata.propTypes = {
   constraints: _propTypes["default"].object,
   dataExtract: _propTypes["default"].oneOfType([_propTypes["default"].string, _propTypes["default"].func]),
   name: _propTypes["default"].string,
-  label: _propTypes["default"].string
+  label: _propTypes["default"].string,
+  clearOnBlur: _propTypes["default"].bool,
+  allowCustomValue: _propTypes["default"].bool
+};
+ReactDadata.defaultProps = {
+  clearOnBlur: false,
+  allowCustomValue: false
 };
 var _default = ReactDadata;
 exports["default"] = _default;
