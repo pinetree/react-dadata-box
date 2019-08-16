@@ -69,7 +69,10 @@ class ReactDadata extends React.Component {
 
   componentDidUpdate = prevProps => {
     if (this.props.query !== prevProps.query && this.props.query !== '') {
-      this.setState({ query: this.props.query }, this.fetchSuggestions);
+      this.setState({
+        query: this.props.query,
+        isValid: !!this.props.query || undefined
+      }, this.fetchSuggestions);
     }
   };
 
@@ -81,8 +84,8 @@ class ReactDadata extends React.Component {
     const { isValid } = this.state;
     const { value } = event.target;
 
-    if (!isValid) {
-      if (this.props.allowCustomValue) this.props.onChange && this.props.onChange({ ...defaultSuggestion, value });
+    if (isValid === false) {
+      if (this.props.allowCustomValue && this.props.onChange) this.props.onChange({ ...defaultSuggestion, value });
       else if (this.props.clearOnBlur) this.clear();
     }
 

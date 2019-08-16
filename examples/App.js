@@ -59,6 +59,8 @@ class App extends Component {
                 to_bound: { value: 'settlement' }
               }}
               allowClear
+              clearOnBlur
+              fetchOnMount
             />
           </li>
 

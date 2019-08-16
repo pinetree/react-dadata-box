@@ -135,7 +135,8 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_this), "componentDidUpdate", function (prevProps) {
       if (_this.props.query !== prevProps.query && _this.props.query !== '') {
         _this.setState({
-          query: _this.props.query
+          query: _this.props.query,
+          isValid: !!_this.props.query || undefined
         }, _this.fetchSuggestions);
       }
     });
@@ -150,8 +151,8 @@ function (_React$Component) {
       var isValid = _this.state.isValid;
       var value = event.target.value;
 
-      if (!isValid) {
-        if (_this.props.allowCustomValue) _this.props.onChange && _this.props.onChange(_objectSpread({}, defaultSuggestion, {
+      if (isValid === false) {
+        if (_this.props.allowCustomValue && _this.props.onChange) _this.props.onChange(_objectSpread({}, defaultSuggestion, {
           value: value
         }));else if (_this.props.clearOnBlur) _this.clear();
       }
