@@ -48,8 +48,12 @@ var defaultSuggestion = {
   value: ''
 };
 
+var escapeForRegexp = function escapeForRegexp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
 var getHighlightWords = function getHighlightWords(query) {
-  var words = query.replace(',', '').split(' ');
+  var words = escapeForRegexp(query).replace(',', '').split(' ');
   var filteredWords = words.filter(function (word) {
     return wordsToPass.indexOf(word) < 0;
   });

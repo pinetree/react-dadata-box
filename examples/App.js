@@ -168,7 +168,7 @@ class App extends Component {
               type="address"
               onChange={this.handleChange}
               allowClear
-              allowInput
+              allowCustomValue
             />
           </li>
 

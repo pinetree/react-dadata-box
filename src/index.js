@@ -11,8 +11,12 @@ const defaultSuggestion = {
   value: ''
 };
 
+const escapeForRegexp = string => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const getHighlightWords = query => {
-  const words = query.replace(',', '').split(' ');
+  const words = escapeForRegexp(query)
+    .replace(',', '')
+    .split(' ');
   const filteredWords = words.filter(word => wordsToPass.indexOf(word) < 0);
   return filteredWords;
 };
@@ -69,10 +73,13 @@ class ReactDadata extends React.Component {
 
   componentDidUpdate = prevProps => {
     if (this.props.query !== prevProps.query && this.props.query !== '') {
-      this.setState({
-        query: this.props.query,
-        isValid: !!this.props.query || undefined
-      }, this.fetchSuggestions);
+      this.setState(
+        {
+          query: this.props.query,
+          isValid: !!this.props.query || undefined
+        },
+        this.fetchSuggestions
+      );
     }
   };
 
@@ -85,7 +92,7 @@ class ReactDadata extends React.Component {
     const { value } = event.target;
 
     if (isValid === false) {
-      if (this.props.allowCustomValue && this.props.onChange) this.props.onChange({ ...defaultSuggestion, value });
+      if (this.props.allowCustomValue) this.returnCustomValue(value);
       else if (this.props.clearOnBlur) this.clear();
     }
 
@@ -103,7 +110,7 @@ class ReactDadata extends React.Component {
   };
 
   onKeyPress = event => {
-    const { suggestionIndex, suggestions } = this.state;
+    const { suggestionIndex, suggestions, query } = this.state;
 
     if (event.which === 40 && suggestionIndex < suggestions.length - 1) {
       // Arrow down
@@ -163,6 +170,8 @@ class ReactDadata extends React.Component {
   onSuggestionClick = index => {
     this.selectSuggestion(index);
   };
+
+  returnCustomValue = value => this.props.onChange && this.props.onChange({ ...defaultSuggestion, value });
 
   clear = () => {
     this.setState({
