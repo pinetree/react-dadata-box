@@ -1,6 +1,14 @@
 .react-dadata__container {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  flex-direction: row-reverse;
   position: relative;
   font-family: sans-serif;
+}
+
+.react-dadata__label {
+  padding-right: 10px;
 }
 
 .react-dadata__input {
@@ -87,13 +95,13 @@
   width: 16px;
   height: 16px;
   opacity: 0.3;
-  background-color: #cccccc;
+  background-color: #999999;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .react-dadata__icon:hover {
-  opacity: 1;
+  opacity: 0.8;
 }
 
 .react-dadata__icon.react-dadata__icon-clear:before, .react-dadata__icon.react-dadata__icon-clear:after {

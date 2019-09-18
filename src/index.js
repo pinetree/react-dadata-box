@@ -11,8 +11,12 @@ const defaultSuggestion = {
   value: ''
 };
 
+const escapeForRegexp = string => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const getHighlightWords = query => {
-  const words = query.replace(',', '').split(' ');
+  const words = escapeForRegexp(query)
+    .replace(',', '')
+    .split(' ');
   const filteredWords = words.filter(word => wordsToPass.indexOf(word) < 0);
   return filteredWords;
 };
@@ -55,21 +59,27 @@ class ReactDadata extends React.Component {
     showSuggestions: true,
     suggestions: [],
     suggestionIndex: 0,
-    isValid: false
+    isValid: this.props.query && !this.props.fetchOnMount
   };
 
   textInput = React.createRef();
   xhr = new XMLHttpRequest();
 
   componentDidMount = () => {
-    if (this.props.query) {
+    if (this.props.query && this.props.fetchOnMount) {
       this.fetchSuggestions();
     }
   };
 
   componentDidUpdate = prevProps => {
-    if (this.props.query !== prevProps.query) {
-      this.setState({ query: this.props.query }, this.fetchSuggestions);
+    if (this.props.query !== prevProps.query && this.props.query !== '') {
+      this.setState(
+        {
+          query: this.props.query,
+          isValid: !!this.props.query || undefined
+        },
+        this.fetchSuggestions
+      );
     }
   };
 
@@ -77,22 +87,30 @@ class ReactDadata extends React.Component {
     this.setState({ inputFocused: true });
   };
 
-  onInputBlur = () => {
+  onInputBlur = event => {
+    const { isValid } = this.state;
+    const { value } = event.target;
+
+    if (isValid === false) {
+      if (this.props.allowCustomValue) this.returnCustomValue(value);
+      else if (this.props.clearOnBlur) this.clear();
+    }
+
     this.setState({ inputFocused: false });
   };
 
   onInputChange = event => {
     const { value } = event.target;
 
-    this.setState({ query: value, showSuggestions: true }, () => {
+    if (!value) return this.clear();
+
+    this.setState({ query: value, showSuggestions: true, isValid: false }, () => {
       this.fetchSuggestions();
     });
-
-    !value && this.clear()
   };
 
   onKeyPress = event => {
-    const { suggestionIndex, suggestions } = this.state;
+    const { suggestionIndex, suggestions, query } = this.state;
 
     if (event.which === 40 && suggestionIndex < suggestions.length - 1) {
       // Arrow down
@@ -113,13 +131,15 @@ class ReactDadata extends React.Component {
     this.xhr.abort();
 
     const { type } = this.state;
-    const { city } = this.props;
+    const { city, constraints, filter } = this.props;
 
     const payload = {
       query: this.state.query,
-      count: this.props.count || 10
+      count: this.props.count || 10,
+      ...constraints
     };
 
+    // TODO: change this prop behavior later
     if (city && type === 'address') {
       payload.from_bound = { value: 'city' };
       payload.to_bound = { value: 'settlement' };
@@ -141,7 +161,8 @@ class ReactDadata extends React.Component {
         const { suggestions } = JSON.parse(this.xhr.response);
 
         if (suggestions) {
-          this.setState({ suggestions, suggestionIndex: 0 });
+          const filteredSuggestions = filter ? filter(suggestions) : suggestions;
+          this.setState({ suggestions: filteredSuggestions, suggestionIndex: 0 });
         }
       }
     };
@@ -151,40 +172,69 @@ class ReactDadata extends React.Component {
     this.selectSuggestion(index);
   };
 
+  returnCustomValue = value => this.props.onChange && this.props.onChange({ ...defaultSuggestion, value });
+
   clear = () => {
     this.setState({
       query: '',
-      showSuggestions: false
+      showSuggestions: false,
+      isValid: false
     });
     this.props.onChange && this.props.onChange(defaultSuggestion);
-  }
+  };
+
+  extract = suggestion => {
+    const { dataExtract } = this.props;
+
+    if (!dataExtract || !suggestion) return suggestion;
+
+    const { data } = suggestion;
+
+    if (!data) return suggestion;
+    else if (dataExtract instanceof Function) {
+      return {
+        ...suggestion,
+        value: dataExtract(data)
+      };
+    } else if (typeof dataExtract === 'string' && dataExtract) {
+      return {
+        ...suggestion,
+        value: data[dataExtract]
+      };
+    }
+  };
 
   selectSuggestion = (index, showSuggestions = false) => {
-    const { suggestions } = this.state;
+    const { suggestions, query } = this.state;
+    const suggestion = this.extract(suggestions[index]);
+    const { value } = suggestion || defaultSuggestion;
 
-    const { value } = suggestions[index];
+    if (!value && this.props.allowCustomValue) return this.props.onChange({ ...defaultSuggestion, value: query });
+
     this.setState({
       query: value,
-      showSuggestions: showSuggestions
+      showSuggestions: showSuggestions,
+      isValid: !!value
     });
 
     if (this.props.onChange) {
-      this.props.onChange(suggestions[index]);
+      this.props.onChange(suggestion);
     }
   };
 
   render() {
     const { suggestionIndex, query, inputFocused, suggestions, showSuggestions, type } = this.state;
-    const { placeholder, autocomplete, styles, allowClear, className } =  this.props;
+    const { placeholder, autocomplete, styles, allowClear, className, name, label } = this.props;
 
     const showSuggestionsList = inputFocused && showSuggestions && !!suggestions.length;
 
     return (
       <div className={`react-dadata react-dadata__container ${className}`} style={styles}>
         <input
+          name={name}
           className={`react-dadata__input${allowClear ? ' react-dadata__input-clearable' : ''}`}
           placeholder={placeholder || ''}
-          value={query}
+          value={query || ''}
           ref={input => {
             this.textInput = input;
           }}
@@ -194,13 +244,11 @@ class ReactDadata extends React.Component {
           onBlur={this.onInputBlur}
           autoComplete={autocomplete || 'off'}
         />
-        {
-          allowClear &&
-          query &&
+        {allowClear && query && (
           <span className="react-dadata__input-suffix" onClick={this.clear}>
             <i className="react-dadata__icon react-dadata__icon-clear" />
           </span>
-        }
+        )}
         {showSuggestionsList && (
           <SuggestionsList
             suggestions={suggestions}
@@ -210,13 +258,18 @@ class ReactDadata extends React.Component {
             onSuggestionClick={this.onSuggestionClick}
           />
         )}
+        {label && (
+          <label className="react-dadata__label" htmlFor={name}>
+            {label}
+          </label>
+        )}
       </div>
     );
   }
 }
 
 ReactDadata.propTypes = {
-  autocomplete: PropTypes.bool,
+  autocomplete: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   city: PropTypes.bool,
   className: PropTypes.string,
   count: PropTypes.number,
@@ -226,7 +279,21 @@ ReactDadata.propTypes = {
   style: PropTypes.objectOf(PropTypes.string),
   token: PropTypes.string.isRequired,
   type: PropTypes.string,
-  allowClear: PropTypes.bool
+  allowClear: PropTypes.bool,
+  constraints: PropTypes.object,
+  dataExtract: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+  name: PropTypes.string,
+  label: PropTypes.string,
+  clearOnBlur: PropTypes.bool,
+  allowCustomValue: PropTypes.bool,
+  fetchOnMount: PropTypes.bool,
+  filter: PropTypes.func
+};
+
+ReactDadata.defaultProps = {
+  clearOnBlur: false,
+  allowCustomValue: false,
+  fetchOnMount: false
 };
 
 export default ReactDadata;
