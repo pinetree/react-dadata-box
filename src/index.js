@@ -131,7 +131,7 @@ class ReactDadata extends React.Component {
     this.xhr.abort();
 
     const { type } = this.state;
-    const { city, constraints } = this.props;
+    const { city, constraints, filter } = this.props;
 
     const payload = {
       query: this.state.query,
@@ -161,7 +161,8 @@ class ReactDadata extends React.Component {
         const { suggestions } = JSON.parse(this.xhr.response);
 
         if (suggestions) {
-          this.setState({ suggestions, suggestionIndex: 0 });
+          const filteredSuggestions = filter ? filter(suggestions) : suggestions;
+          this.setState({ suggestions: filteredSuggestions, suggestionIndex: 0 });
         }
       }
     };
@@ -285,7 +286,8 @@ ReactDadata.propTypes = {
   label: PropTypes.string,
   clearOnBlur: PropTypes.bool,
   allowCustomValue: PropTypes.bool,
-  fetchOnMount: PropTypes.bool
+  fetchOnMount: PropTypes.bool,
+  filter: PropTypes.func
 };
 
 ReactDadata.defaultProps = {

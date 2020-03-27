@@ -156,9 +156,7 @@ function (_React$Component) {
       var value = event.target.value;
 
       if (isValid === false) {
-        if (_this.props.allowCustomValue && _this.props.onChange) _this.props.onChange(_objectSpread({}, defaultSuggestion, {
-          value: value
-        }));else if (_this.props.clearOnBlur) _this.clear();
+        if (_this.props.allowCustomValue) _this.returnCustomValue(value);else if (_this.props.clearOnBlur) _this.clear();
       }
 
       _this.setState({
@@ -182,7 +180,8 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_this), "onKeyPress", function (event) {
       var _this$state = _this.state,
           suggestionIndex = _this$state.suggestionIndex,
-          suggestions = _this$state.suggestions;
+          suggestions = _this$state.suggestions,
+          query = _this$state.query;
 
       if (event.which === 40 && suggestionIndex < suggestions.length - 1) {
         // Arrow down
@@ -213,7 +212,8 @@ function (_React$Component) {
       var type = _this.state.type;
       var _this$props = _this.props,
           city = _this$props.city,
-          constraints = _this$props.constraints;
+          constraints = _this$props.constraints,
+          filter = _this$props.filter;
 
       var payload = _objectSpread({
         query: _this.state.query,
@@ -251,8 +251,10 @@ function (_React$Component) {
               suggestions = _JSON$parse.suggestions;
 
           if (suggestions) {
+            var filteredSuggestions = filter ? filter(suggestions) : suggestions;
+
             _this.setState({
-              suggestions: suggestions,
+              suggestions: filteredSuggestions,
               suggestionIndex: 0
             });
           }
@@ -262,6 +264,12 @@ function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "onSuggestionClick", function (index) {
       _this.selectSuggestion(index);
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "returnCustomValue", function (value) {
+      return _this.props.onChange && _this.props.onChange(_objectSpread({}, defaultSuggestion, {
+        value: value
+      }));
     });
 
     _defineProperty(_assertThisInitialized(_this), "clear", function () {
@@ -394,7 +402,8 @@ ReactDadata.propTypes = {
   label: _propTypes["default"].string,
   clearOnBlur: _propTypes["default"].bool,
   allowCustomValue: _propTypes["default"].bool,
-  fetchOnMount: _propTypes["default"].bool
+  fetchOnMount: _propTypes["default"].bool,
+  filter: _propTypes["default"].func
 };
 ReactDadata.defaultProps = {
   clearOnBlur: false,
