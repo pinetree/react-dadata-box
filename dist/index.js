@@ -65,7 +65,7 @@ var SuggestionInfo = function SuggestionInfo(_ref) {
       type = _ref.type;
   return React.createElement("div", {
     className: "react-dadata__suggestion-info"
-  }, React.createElement("span", null, type === 'party' ? data.inn : data.bic, " ", data.address.value));
+  }, React.createElement("span", null, type === 'party' ? data.inn : data.bic, " ", data.address && data.address.value));
 };
 
 var SuggestionsList = function SuggestionsList(_ref2) {
