@@ -262,6 +262,48 @@ function (_React$Component) {
       };
     });
 
+    _defineProperty(_assertThisInitialized(_this), "findById", function (id) {
+      _this.xhr.abort();
+
+      var type = _this.state.type;
+      var _this$props2 = _this.props,
+          city = _this$props2.city,
+          constraints = _this$props2.constraints,
+          filter = _this$props2.filter;
+
+      var payload = _objectSpread({
+        query: id
+      }, constraints);
+
+      _this.xhr.open('POST', "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/".concat(type));
+
+      _this.xhr.setRequestHeader('Accept', 'application/json');
+
+      _this.xhr.setRequestHeader('Authorization', "Token ".concat(_this.props.token));
+
+      _this.xhr.setRequestHeader('Content-Type', 'application/json');
+
+      _this.xhr.send(JSON.stringify(payload));
+
+      _this.xhr.onreadystatechange = function () {
+        if (_this.xhr.readyState !== 4) {
+          return;
+        }
+
+        if (_this.xhr.status === 200) {
+          var _JSON$parse2 = JSON.parse(_this.xhr.response),
+              suggestions = _JSON$parse2.suggestions;
+
+          if (suggestions) {
+            _this.setState({
+              suggestions: suggestions,
+              suggestionIndex: 0
+            });
+          }
+        }
+      };
+    });
+
     _defineProperty(_assertThisInitialized(_this), "onSuggestionClick", function (index) {
       _this.selectSuggestion(index);
     });
@@ -318,7 +360,22 @@ function (_React$Component) {
         isValid: !!value
       });
 
-      if (_this.props.onChange) {
+      if (_this.props.mode === 'extended' && suggestion.data) {
+        switch (_this.state.type) {
+          case 'address':
+            _this.findById(suggestion.data.fias_id || suggestion.data.kladr_id);
+
+            break;
+
+          case 'party':
+            _this.findById(suggestion.data.inn);
+
+            break;
+
+          default:
+            _this.props.onChange && _this.props.onChange(suggestion);
+        }
+      } else if (_this.props.onChange) {
         _this.props.onChange(suggestion);
       }
     });
@@ -338,14 +395,14 @@ function (_React$Component) {
           suggestions = _this$state3.suggestions,
           showSuggestions = _this$state3.showSuggestions,
           type = _this$state3.type;
-      var _this$props2 = this.props,
-          placeholder = _this$props2.placeholder,
-          autocomplete = _this$props2.autocomplete,
-          styles = _this$props2.styles,
-          allowClear = _this$props2.allowClear,
-          className = _this$props2.className,
-          name = _this$props2.name,
-          label = _this$props2.label;
+      var _this$props3 = this.props,
+          placeholder = _this$props3.placeholder,
+          autocomplete = _this$props3.autocomplete,
+          styles = _this$props3.styles,
+          allowClear = _this$props3.allowClear,
+          className = _this$props3.className,
+          name = _this$props3.name,
+          label = _this$props3.label;
       var showSuggestionsList = inputFocused && showSuggestions && !!suggestions.length;
       return React.createElement("div", {
         className: "react-dadata react-dadata__container ".concat(className),
@@ -403,12 +460,14 @@ ReactDadata.propTypes = {
   clearOnBlur: _propTypes["default"].bool,
   allowCustomValue: _propTypes["default"].bool,
   fetchOnMount: _propTypes["default"].bool,
-  filter: _propTypes["default"].func
+  filter: _propTypes["default"].func,
+  mode: _propTypes["default"].string
 };
 ReactDadata.defaultProps = {
   clearOnBlur: false,
   allowCustomValue: false,
-  fetchOnMount: false
+  fetchOnMount: false,
+  mode: 'standard'
 };
 var _default = ReactDadata;
 exports["default"] = _default;
