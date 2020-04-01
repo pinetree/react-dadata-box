@@ -168,6 +168,38 @@ class ReactDadata extends React.Component {
     };
   };
 
+  findById = id => {
+    this.xhr.abort();
+
+    const { type } = this.state;
+    const { city, constraints, filter } = this.props;
+
+    const payload = {
+      query: id,
+      ...constraints
+    };
+
+    this.xhr.open('POST', `https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/${type}`);
+    this.xhr.setRequestHeader('Accept', 'application/json');
+    this.xhr.setRequestHeader('Authorization', `Token ${this.props.token}`);
+    this.xhr.setRequestHeader('Content-Type', 'application/json');
+    this.xhr.send(JSON.stringify(payload));
+
+    this.xhr.onreadystatechange = () => {
+      if (this.xhr.readyState !== 4) {
+        return;
+      }
+
+      if (this.xhr.status === 200) {
+        const { suggestions } = JSON.parse(this.xhr.response);
+
+        if (suggestions) {
+          this.setState({ suggestions: suggestions, suggestionIndex: 0 });
+        }
+      }
+    };
+  };
+
   onSuggestionClick = index => {
     this.selectSuggestion(index);
   };
@@ -217,7 +249,18 @@ class ReactDadata extends React.Component {
       isValid: !!value
     });
 
-    if (this.props.onChange) {
+    if (this.props.mode === 'extended' && suggestion.data) {
+      switch (this.state.type) {
+        case 'address':
+          this.findById(suggestion.data.fias_id || suggestion.data.kladr_id);
+          break;
+        case 'party':
+          this.findById(suggestion.data.inn);
+          break;
+        default:
+          this.props.onChange && this.props.onChange(suggestion);
+      }
+    } else if (this.props.onChange) {
       this.props.onChange(suggestion);
     }
   };
@@ -287,13 +330,15 @@ ReactDadata.propTypes = {
   clearOnBlur: PropTypes.bool,
   allowCustomValue: PropTypes.bool,
   fetchOnMount: PropTypes.bool,
-  filter: PropTypes.func
+  filter: PropTypes.func,
+  mode: PropTypes.string
 };
 
 ReactDadata.defaultProps = {
   clearOnBlur: false,
   allowCustomValue: false,
-  fetchOnMount: false
+  fetchOnMount: false,
+  mode: 'standard'
 };
 
 export default ReactDadata;

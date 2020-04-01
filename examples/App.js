@@ -138,6 +138,7 @@ class App extends Component {
               placeholder="Адрес, до номера дома"
               type="address"
               onChange={this.handleChange}
+              mode="extended"
               allowClear
             />
           </li>
@@ -174,7 +175,7 @@ class App extends Component {
 
           <li>
             <h1>Прочее</h1>
-            <ReactDadataBox className="data" token={token} placeholder="Организация" type="party" />
+            <ReactDadataBox className="data" token={token} placeholder="Организация" type="party" mode="extended" />
             <ReactDadataBox className="data" token={token} placeholder="Банк" type="bank" />
             <ReactDadataBox className="data" token={token} placeholder="Email" type="email" />
             <ReactDadataBox className="data" token={token} placeholder="ФИО" type="fio" />
