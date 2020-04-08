@@ -264,7 +264,7 @@ function (_React$Component) {
       };
     });
 
-    _defineProperty(_assertThisInitialized(_this), "findById", function (id) {
+    _defineProperty(_assertThisInitialized(_this), "findById", function (id, callback) {
       _this.xhr.abort();
 
       var type = _this.state.type;
@@ -300,6 +300,9 @@ function (_React$Component) {
               suggestions: suggestions,
               suggestionIndex: 0
             });
+
+            callback && callback(suggestions[0]);
+            return suggestions;
           }
         }
       };
@@ -364,20 +367,19 @@ function (_React$Component) {
       if (_this.props.mode === 'extended' && suggestion.data) {
         switch (_this.state.type) {
           case 'address':
-            _this.findById(suggestion.data.fias_id || suggestion.data.kladr_id);
+            _this.findById(suggestion.data.fias_id || suggestion.data.kladr_id, _this.props.onChange);
 
             break;
 
           case 'party':
-            _this.findById(suggestion.data.inn);
+            _this.findById(suggestion.data.inn, _this.props.onChange);
 
             break;
 
           default:
-            _this.props.onChange && _this.props.onChange(suggestion);
         }
-      } else if (_this.props.onChange) {
-        _this.props.onChange(suggestion);
+      } else {
+        _this.props.onChange && _this.props.onChange(suggestion);
       }
     });
 
