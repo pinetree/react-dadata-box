@@ -262,7 +262,12 @@ function (_React$Component) {
       };
     });
 
-    _defineProperty(_assertThisInitialized(_this), "findById", function (id, callback) {
+    _defineProperty(_assertThisInitialized(_this), "findById", function (id, callback, suggestion) {
+      if (!id) {
+        callback && callback(suggestion);
+        return;
+      }
+
       _this.xhr.abort();
 
       var type = _this.state.type;
@@ -366,12 +371,12 @@ function (_React$Component) {
       if (_this.props.mode === 'extended' && suggestion.data) {
         switch (_this.state.type) {
           case 'address':
-            _this.findById(suggestion.data.fias_id || suggestion.data.kladr_id, _this.props.onChange);
+            _this.findById(suggestion.data.fias_id || suggestion.data.kladr_id, _this.props.onChange, suggestion);
 
             break;
 
           case 'party':
-            _this.findById(suggestion.data.inn, _this.props.onChange);
+            _this.findById(suggestion.data.inn, _this.props.onChange, suggestion);
 
             break;
 
