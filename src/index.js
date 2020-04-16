@@ -170,7 +170,12 @@ class ReactDadata extends React.Component {
     };
   };
 
-  findById = (id, callback) => {
+  findById = (id, callback, suggestion) => {
+    if (!id) {
+      callback && callback(suggestion);
+      return;
+    }
+
     this.xhr.abort();
 
     const { type } = this.state;
@@ -256,10 +261,10 @@ class ReactDadata extends React.Component {
     if (this.props.mode === 'extended' && suggestion.data) {
       switch (this.state.type) {
         case 'address':
-          this.findById(suggestion.data.fias_id || suggestion.data.kladr_id, this.props.onChange);
+          this.findById(suggestion.data.fias_id || suggestion.data.kladr_id, this.props.onChange, suggestion);
           break;
         case 'party':
-          this.findById(suggestion.data.inn, this.props.onChange);
+          this.findById(suggestion.data.inn, this.props.onChange, suggestion);
           break;
         default:
       }
