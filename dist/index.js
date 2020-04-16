@@ -41,6 +41,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+var DEFAULT_API_URI = 'https://suggestions.dadata.ru';
 var wordsToPass = ['г', 'респ', 'ул', 'р-н', 'село', 'деревня', 'поселок', 'пр-д', 'пл', 'к', 'кв', 'обл', 'д'];
 var defaultSuggestion = {
   data: {},
@@ -211,6 +212,7 @@ function (_React$Component) {
 
       var type = _this.state.type;
       var _this$props = _this.props,
+          baseUrl = _this$props.baseUrl,
           city = _this$props.city,
           constraints = _this$props.constraints,
           filter = _this$props.filter;
@@ -231,7 +233,7 @@ function (_React$Component) {
         payload.value = 'settlement';
       }
 
-      _this.xhr.open('POST', "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/".concat(type));
+      _this.xhr.open('POST', "".concat(baseUrl, "/suggestions/api/4_1/rs/suggest/").concat(type));
 
       _this.xhr.setRequestHeader('Accept', 'application/json');
 
@@ -267,15 +269,14 @@ function (_React$Component) {
 
       var type = _this.state.type;
       var _this$props2 = _this.props,
-          city = _this$props2.city,
           constraints = _this$props2.constraints,
-          filter = _this$props2.filter;
+          baseUrl = _this$props2.baseUrl;
 
       var payload = _objectSpread({
         query: id
       }, constraints);
 
-      _this.xhr.open('POST', "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/".concat(type));
+      _this.xhr.open('POST', "".concat(baseUrl, "/suggestions/api/4_1/rs/findById/").concat(type));
 
       _this.xhr.setRequestHeader('Accept', 'application/json');
 
@@ -463,13 +464,15 @@ ReactDadata.propTypes = {
   allowCustomValue: _propTypes["default"].bool,
   fetchOnMount: _propTypes["default"].bool,
   filter: _propTypes["default"].func,
-  mode: _propTypes["default"].string
+  mode: _propTypes["default"].string,
+  baseUrl: _propTypes["default"].string
 };
 ReactDadata.defaultProps = {
   clearOnBlur: false,
   allowCustomValue: false,
   fetchOnMount: false,
-  mode: 'standard'
+  mode: 'standard',
+  baseUrl: DEFAULT_API_URI
 };
 var _default = ReactDadata;
 exports["default"] = _default;
