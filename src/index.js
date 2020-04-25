@@ -264,7 +264,7 @@ class ReactDadata extends React.Component {
           this.findById(suggestion.data.fias_id || suggestion.data.kladr_id, this.props.onChange, suggestion);
           break;
         case 'party':
-          this.findById(suggestion.data.inn, this.props.onChange, suggestion);
+          this.findById(suggestion.data.ogrn || suggestion.data.inn, this.props.onChange, suggestion);
           break;
         default:
       }

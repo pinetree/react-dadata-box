@@ -377,7 +377,7 @@ function (_React$Component) {
             break;
 
           case 'party':
-            _this.findById(suggestion.data.inn, _this.props.onChange, suggestion);
+            _this.findById(suggestion.data.ogrn || suggestion.data.inn, _this.props.onChange, suggestion);
 
             break;
 
