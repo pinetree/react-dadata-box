@@ -41,6 +41,7 @@ const SuggestionsList = ({ suggestions, suggestionIndex, query, type, onSuggesti
           onSuggestionClick(index);
         }}
         className={`react-dadata__suggestion ${index === suggestionIndex && 'react-dadata__suggestion--current'}`}
+        data-suggestion-status={(data && data.state && data.state.status) || ''}
       >
         <Highlighter
           highlightClassName="react-dadata--highlighted"
