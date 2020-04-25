@@ -87,11 +87,13 @@ var SuggestionsList = function SuggestionsList(_ref2) {
       onMouseDown: function onMouseDown() {
         onSuggestionClick(index);
       },
-      className: "react-dadata__suggestion ".concat(index === suggestionIndex && 'react-dadata__suggestion--current')
+      className: "react-dadata__suggestion ".concat(index === suggestionIndex && 'react-dadata__suggestion--current'),
+      "data-suggestion-status": data && data.state && data.state.status || ''
     }, React.createElement(_reactHighlightWords["default"], {
       highlightClassName: "react-dadata--highlighted",
       searchWords: getHighlightWords(query),
-      textToHighlight: value
+      textToHighlight: value,
+      className: "react-dadata__suggestion--value"
     }), (type === 'party' || type === 'bank') && React.createElement(SuggestionInfo, {
       data: data,
       type: type

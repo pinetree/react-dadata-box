@@ -41,10 +41,11 @@
   right: 0;
 }
 
-.react-dadata__suggestion[data-suggestion-status="LIQUIDATED"] {
+.react-dadata__suggestion[data-suggestion-status='LIQUIDATED'] .react-dadata__suggestion--value {
   position: relative;
 }
-.react-dadata__suggestion[data-suggestion-status="LIQUIDATED"]:after {
+
+.react-dadata__suggestion[data-suggestion-status='LIQUIDATED'] .react-dadata__suggestion--value:after {
   position: absolute;
   left: 0;
   right: 0;

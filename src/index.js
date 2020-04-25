@@ -47,6 +47,7 @@ const SuggestionsList = ({ suggestions, suggestionIndex, query, type, onSuggesti
           highlightClassName="react-dadata--highlighted"
           searchWords={getHighlightWords(query)}
           textToHighlight={value}
+          className="react-dadata__suggestion--value"
         />
         {(type === 'party' || type === 'bank') && <SuggestionInfo data={data} type={type} />}
       </div>

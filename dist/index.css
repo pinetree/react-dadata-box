@@ -41,6 +41,19 @@
   right: 0;
 }
 
+.react-dadata__suggestion[data-suggestion-status='LIQUIDATED'] .react-dadata__suggestion--value {
+  position: relative;
+}
+
+.react-dadata__suggestion[data-suggestion-status='LIQUIDATED'] .react-dadata__suggestion--value:after {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid rgba(0, 0, 0, 0.4);
+  content: "";
+}
+
 .react-dadata__suggestion-note {
   font-size: 14px;
   color: #828282;
