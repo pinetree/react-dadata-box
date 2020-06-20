@@ -148,10 +148,12 @@ function (_React$Component) {
       }
     });
 
-    _defineProperty(_assertThisInitialized(_this), "onInputFocus", function () {
+    _defineProperty(_assertThisInitialized(_this), "onInputFocus", function (event) {
       _this.setState({
-        inputFocused: true
+        c: true
       });
+
+      _this.props.onFocus && _this.props.onFocus(event);
     });
 
     _defineProperty(_assertThisInitialized(_this), "onInputBlur", function (event) {
@@ -165,6 +167,8 @@ function (_React$Component) {
       _this.setState({
         inputFocused: false
       });
+
+      _this.props.onBlur && _this.props.onBlur(event);
     });
 
     _defineProperty(_assertThisInitialized(_this), "onInputChange", function (event) {
@@ -461,6 +465,8 @@ ReactDadata.propTypes = {
   count: _propTypes["default"].number,
   onChange: _propTypes["default"].func,
   onSuggest: _propTypes["default"].func,
+  onFocus: _propTypes["default"].func,
+  onBlur: _propTypes["default"].func,
   placeholder: _propTypes["default"].string,
   query: _propTypes["default"].string,
   style: _propTypes["default"].objectOf(_propTypes["default"].string),

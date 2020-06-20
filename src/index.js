@@ -87,8 +87,9 @@ class ReactDadata extends React.Component {
     }
   };
 
-  onInputFocus = () => {
-    this.setState({ inputFocused: true });
+  onInputFocus = event => {
+    this.setState({ c: true });
+    this.props.onFocus && this.props.onFocus(event);
   };
 
   onInputBlur = event => {
@@ -101,6 +102,7 @@ class ReactDadata extends React.Component {
     }
 
     this.setState({ inputFocused: false });
+    this.props.onBlur && this.props.onBlur(event);
   };
 
   onInputChange = event => {
@@ -330,6 +332,8 @@ ReactDadata.propTypes = {
   count: PropTypes.number,
   onChange: PropTypes.func,
   onSuggest: PropTypes.func,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
   placeholder: PropTypes.string,
   query: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.string),
