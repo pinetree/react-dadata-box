@@ -150,7 +150,7 @@ function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "onInputFocus", function (event) {
       _this.setState({
-        c: true
+        inputFocused: true
       });
 
       _this.props.onFocus && _this.props.onFocus(event);
