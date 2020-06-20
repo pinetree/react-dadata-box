@@ -92,6 +92,7 @@ interface Props {
     className?: string,
     count?: number,
     onChange?: (suggestion: DadataSuggestion) => void,
+    onSuggest?: (suggestions: Array<DadataSuggestion>) => void,
     placeholder?: string,
     query?: string,
     style?: React.CSSProperties,

@@ -166,7 +166,9 @@ class ReactDadata extends React.Component {
 
         if (suggestions) {
           const filteredSuggestions = filter ? filter(suggestions) : suggestions;
-          this.setState({ suggestions: filteredSuggestions, suggestionIndex: 0 });
+          const suggestionsState = { suggestions: filteredSuggestions, suggestionIndex: 0 };
+          this.setState(suggestionsState);
+          this.props.onSuggest && this.props.onSuggest(suggestionsState);
         }
       }
     };
@@ -327,6 +329,7 @@ ReactDadata.propTypes = {
   className: PropTypes.string,
   count: PropTypes.number,
   onChange: PropTypes.func,
+  onSuggest: PropTypes.func,
   placeholder: PropTypes.string,
   query: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.string),
