@@ -256,11 +256,14 @@ function (_React$Component) {
 
           if (suggestions) {
             var filteredSuggestions = filter ? filter(suggestions) : suggestions;
-
-            _this.setState({
+            var suggestionsState = {
               suggestions: filteredSuggestions,
               suggestionIndex: 0
-            });
+            };
+
+            _this.setState(suggestionsState);
+
+            _this.props.onSuggest && _this.props.onSuggest(suggestionsState);
           }
         }
       };
@@ -457,6 +460,7 @@ ReactDadata.propTypes = {
   className: _propTypes["default"].string,
   count: _propTypes["default"].number,
   onChange: _propTypes["default"].func,
+  onSuggest: _propTypes["default"].func,
   placeholder: _propTypes["default"].string,
   query: _propTypes["default"].string,
   style: _propTypes["default"].objectOf(_propTypes["default"].string),
