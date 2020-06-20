@@ -88,7 +88,7 @@ class ReactDadata extends React.Component {
   };
 
   onInputFocus = event => {
-    this.setState({ c: true });
+    this.setState({ inputFocused: true });
     this.props.onFocus && this.props.onFocus(event);
   };
 
