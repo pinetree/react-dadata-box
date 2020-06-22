@@ -172,7 +172,7 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "onInputChange", function (event) {
-      _this.props.inputChange && _this.props.inputChange(event);
+      _this.props.onInputChange && _this.props.onInputChange(event);
       var value = event.target.value;
       if (!value) return _this.clear();
 

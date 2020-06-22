@@ -106,7 +106,7 @@ class ReactDadata extends React.Component {
   };
 
   onInputChange = event => {
-    this.props.inputChange && this.props.inputChange(event)
+    this.props.onInputChange && this.props.onInputChange(event)
 
     const { value } = event.target;
 
