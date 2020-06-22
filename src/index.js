@@ -106,6 +106,8 @@ class ReactDadata extends React.Component {
   };
 
   onInputChange = event => {
+    this.props.inputChange && this.props.inputChange(event)
+
     const { value } = event.target;
 
     if (!value) return this.clear();
@@ -336,6 +338,7 @@ ReactDadata.propTypes = {
   onSuggest: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
+  onInputChange: PropTypes.func,
   placeholder: PropTypes.string,
   query: PropTypes.string,
   style: PropTypes.objectOf(PropTypes.string),

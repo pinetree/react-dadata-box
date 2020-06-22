@@ -95,6 +95,7 @@ interface Props {
   onSuggest?: (suggestions: Array<DadataSuggestion>) => void;
   onFocus?: (ev?: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (ev?: React.FocusEvent<HTMLInputElement>) => void;
+  onInputChange?: (ev: React.FormEvent<HTMLInputElement>) => void;
   placeholder?: string;
   query?: string;
   style?: React.CSSProperties;

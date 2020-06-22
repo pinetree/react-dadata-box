@@ -172,6 +172,7 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "onInputChange", function (event) {
+      _this.props.inputChange && _this.props.inputChange(event);
       var value = event.target.value;
       if (!value) return _this.clear();
 
@@ -469,6 +470,7 @@ ReactDadata.propTypes = {
   onSuggest: _propTypes["default"].func,
   onFocus: _propTypes["default"].func,
   onBlur: _propTypes["default"].func,
+  onInputChange: _propTypes["default"].func,
   placeholder: _propTypes["default"].string,
   query: _propTypes["default"].string,
   style: _propTypes["default"].objectOf(_propTypes["default"].string),
