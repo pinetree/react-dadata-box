@@ -137,7 +137,9 @@ class ReactDadata extends React.Component {
     this.xhr.abort();
 
     const { type } = this.state;
-    const { baseUrl, city, constraints, filter } = this.props;
+    const { baseUrl, city, constraints, filter, disableSuggest } = this.props;
+
+    if(disableSuggest) return
 
     const payload = {
       query: this.state.query,
@@ -349,7 +351,8 @@ ReactDadata.propTypes = {
   fetchOnMount: PropTypes.bool,
   filter: PropTypes.func,
   mode: PropTypes.string,
-  baseUrl: PropTypes.string
+  baseUrl: PropTypes.string,
+  disableSuggest: PropTypes.bool
 };
 
 ReactDadata.defaultProps = {
@@ -357,7 +360,8 @@ ReactDadata.defaultProps = {
   allowCustomValue: false,
   fetchOnMount: false,
   mode: 'standard',
-  baseUrl: DEFAULT_API_URI
+  baseUrl: DEFAULT_API_URI,
+  disableSuggest: false
 };
 
 export default ReactDadata;

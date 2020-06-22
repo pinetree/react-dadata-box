@@ -221,7 +221,9 @@ function (_React$Component) {
           baseUrl = _this$props.baseUrl,
           city = _this$props.city,
           constraints = _this$props.constraints,
-          filter = _this$props.filter;
+          filter = _this$props.filter,
+          disableSuggest = _this$props.disableSuggest;
+      if (disableSuggest) return;
 
       var payload = _objectSpread({
         query: _this.state.query,
@@ -482,14 +484,16 @@ ReactDadata.propTypes = {
   fetchOnMount: _propTypes["default"].bool,
   filter: _propTypes["default"].func,
   mode: _propTypes["default"].string,
-  baseUrl: _propTypes["default"].string
+  baseUrl: _propTypes["default"].string,
+  disableSuggest: _propTypes["default"].bool
 };
 ReactDadata.defaultProps = {
   clearOnBlur: false,
   allowCustomValue: false,
   fetchOnMount: false,
   mode: 'standard',
-  baseUrl: DEFAULT_API_URI
+  baseUrl: DEFAULT_API_URI,
+  disableSuggest: false
 };
 var _default = ReactDadata;
 exports["default"] = _default;

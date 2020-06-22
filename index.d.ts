@@ -101,6 +101,7 @@ interface Props {
   token: string;
   type?: string;
   allowClear?: boolean;
+  disableSuggest?: boolean;
 }
 
 declare class ReactDadataBox extends React.Component<Props> {}
