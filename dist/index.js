@@ -422,8 +422,9 @@ function (_React$Component) {
           allowClear = _this$props3.allowClear,
           className = _this$props3.className,
           name = _this$props3.name,
-          label = _this$props3.label;
-      var showSuggestionsList = inputFocused && showSuggestions && !!suggestions.length;
+          label = _this$props3.label,
+          disableSuggest = _this$props3.disableSuggest;
+      var showSuggestionsList = inputFocused && !disableSuggest && showSuggestions && !!suggestions.length;
       return React.createElement("div", {
         className: "react-dadata react-dadata__container ".concat(className),
         style: styles

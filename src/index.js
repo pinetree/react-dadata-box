@@ -106,7 +106,7 @@ class ReactDadata extends React.Component {
   };
 
   onInputChange = event => {
-    this.props.onInputChange && this.props.onInputChange(event)
+    this.props.onInputChange && this.props.onInputChange(event);
 
     const { value } = event.target;
 
@@ -141,7 +141,7 @@ class ReactDadata extends React.Component {
     const { type } = this.state;
     const { baseUrl, city, constraints, filter, disableSuggest } = this.props;
 
-    if(disableSuggest) return
+    if (disableSuggest) return;
 
     const payload = {
       query: this.state.query,
@@ -285,9 +285,9 @@ class ReactDadata extends React.Component {
 
   render() {
     const { suggestionIndex, query, inputFocused, suggestions, showSuggestions, type } = this.state;
-    const { placeholder, autocomplete, styles, allowClear, className, name, label } = this.props;
+    const { placeholder, autocomplete, styles, allowClear, className, name, label, disableSuggest } = this.props;
 
-    const showSuggestionsList = inputFocused && showSuggestions && !!suggestions.length;
+    const showSuggestionsList = inputFocused && !disableSuggest && showSuggestions && !!suggestions.length;
 
     return (
       <div className={`react-dadata react-dadata__container ${className}`} style={styles}>
