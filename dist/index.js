@@ -142,7 +142,8 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_this), "componentDidUpdate", function (prevProps) {
       if (_this.props.query !== prevProps.query && _this.props.query !== '') {
         _this.setState({
-          query: _this.props.query,
+          query: _this.props.queryModifier ? _this.props.queryModifier(_this.props.query) : _this.props.query,
+          rawQuery: _this.props.query,
           isValid: !!_this.props.query || undefined
         }, _this.fetchSuggestions);
       }
@@ -175,9 +176,11 @@ function (_React$Component) {
       _this.props.onInputChange && _this.props.onInputChange(event);
       var value = event.target.value;
       if (!value) return _this.clear();
+      var query = _this.props.queryModifier ? _this.props.queryModifier(value) : value;
 
       _this.setState({
-        query: value,
+        query: query,
+        rawQuery: value,
         showSuggestions: true,
         isValid: false
       }, function () {
@@ -488,7 +491,8 @@ ReactDadata.propTypes = {
   filter: _propTypes["default"].func,
   mode: _propTypes["default"].string,
   baseUrl: _propTypes["default"].string,
-  disableSuggest: _propTypes["default"].bool
+  disableSuggest: _propTypes["default"].bool,
+  queryModifier: _propTypes["default"].func
 };
 ReactDadata.defaultProps = {
   clearOnBlur: false,

@@ -79,7 +79,8 @@ class ReactDadata extends React.Component {
     if (this.props.query !== prevProps.query && this.props.query !== '') {
       this.setState(
         {
-          query: this.props.query,
+          query: this.props.queryModifier ? this.props.queryModifier(this.props.query) : this.props.query,
+          rawQuery: this.props.query,
           isValid: !!this.props.query || undefined
         },
         this.fetchSuggestions
@@ -112,7 +113,9 @@ class ReactDadata extends React.Component {
 
     if (!value) return this.clear();
 
-    this.setState({ query: value, showSuggestions: true, isValid: false }, () => {
+    const query = this.props.queryModifier ? this.props.queryModifier(value) : value;
+
+    this.setState({ query, rawQuery: value, showSuggestions: true, isValid: false }, () => {
       this.fetchSuggestions();
     });
   };
@@ -355,7 +358,8 @@ ReactDadata.propTypes = {
   filter: PropTypes.func,
   mode: PropTypes.string,
   baseUrl: PropTypes.string,
-  disableSuggest: PropTypes.bool
+  disableSuggest: PropTypes.bool,
+  queryModifier: PropTypes.func
 };
 
 ReactDadata.defaultProps = {
