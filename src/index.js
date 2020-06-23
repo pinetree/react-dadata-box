@@ -288,13 +288,14 @@ class ReactDadata extends React.Component {
 
   render() {
     const { suggestionIndex, query, inputFocused, suggestions, showSuggestions, type } = this.state;
-    const { placeholder, autocomplete, styles, allowClear, className, name, label, disableSuggest } = this.props;
+    const { placeholder, autocomplete, styles, allowClear, className, name, label, disableSuggest, customInput } = this.props;
 
     const showSuggestionsList = inputFocused && !disableSuggest && showSuggestions && !!suggestions.length;
+    const Component = customInput || 'input'
 
     return (
       <div className={`react-dadata react-dadata__container ${className}`} style={styles}>
-        <input
+        <Component
           name={name}
           className={`react-dadata__input${allowClear ? ' react-dadata__input-clearable' : ''}`}
           placeholder={placeholder || ''}
@@ -359,7 +360,8 @@ ReactDadata.propTypes = {
   mode: PropTypes.string,
   baseUrl: PropTypes.string,
   disableSuggest: PropTypes.bool,
-  queryModifier: PropTypes.func
+  queryModifier: PropTypes.func,
+  customInput: PropTypes.func
 };
 
 ReactDadata.defaultProps = {

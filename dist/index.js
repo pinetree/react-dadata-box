@@ -426,12 +426,14 @@ function (_React$Component) {
           className = _this$props3.className,
           name = _this$props3.name,
           label = _this$props3.label,
-          disableSuggest = _this$props3.disableSuggest;
+          disableSuggest = _this$props3.disableSuggest,
+          customInput = _this$props3.customInput;
       var showSuggestionsList = inputFocused && !disableSuggest && showSuggestions && !!suggestions.length;
+      var Component = customInput || 'input';
       return React.createElement("div", {
         className: "react-dadata react-dadata__container ".concat(className),
         style: styles
-      }, React.createElement("input", {
+      }, React.createElement(Component, {
         name: name,
         className: "react-dadata__input".concat(allowClear ? ' react-dadata__input-clearable' : ''),
         placeholder: placeholder || '',
@@ -492,7 +494,8 @@ ReactDadata.propTypes = {
   mode: _propTypes["default"].string,
   baseUrl: _propTypes["default"].string,
   disableSuggest: _propTypes["default"].bool,
-  queryModifier: _propTypes["default"].func
+  queryModifier: _propTypes["default"].func,
+  customInput: _propTypes["default"].func
 };
 ReactDadata.defaultProps = {
   clearOnBlur: false,

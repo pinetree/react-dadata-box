@@ -86,6 +86,17 @@ interface DadataSuggestion {
   };
 }
 
+interface BaseInputProps<T = HTMLInputElement> {
+  autoComplete: boolean | 'off';
+  className: string;
+  onBlur: React.FocusEventHandler<T>;
+  onChange: React.ChangeEventHandler<T>;
+  onFocus: React.FocusEventHandler<T>;
+  onKeyDown: React.KeyboardEventHandler<T>;
+  placeholder: string;
+  value: string;
+}
+
 interface Props {
   autocomplete?: boolean;
   city?: boolean;
@@ -104,6 +115,7 @@ interface Props {
   allowClear?: boolean;
   disableSuggest?: boolean;
   queryModifier?: (value: String) => String;
+  customInput?: (props: BaseInputProps) => React.ReactNode;
 }
 
 declare class ReactDadataBox extends React.Component<Props> {}
