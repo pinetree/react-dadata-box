@@ -223,6 +223,7 @@ class ReactDadata extends React.Component {
   };
 
   onSuggestionClick = index => {
+    this.textInput.current && this.textInput.current.focus();
     this.selectSuggestion(index);
   };
 
