@@ -116,6 +116,7 @@ interface Props {
   disableSuggest?: boolean;
   queryModifier?: (value: String) => String;
   customInput?: (props: BaseInputProps) => React.ReactNode;
+  trapFocus?: boolean;
 }
 
 declare class ReactDadataBox extends React.Component<Props> {}

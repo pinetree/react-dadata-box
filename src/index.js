@@ -31,7 +31,7 @@ const SuggestionInfo = ({ data, type }) => (
   </div>
 );
 
-const SuggestionsList = ({ suggestions, suggestionIndex, query, type, onSuggestionClick }) => (
+const SuggestionsList = ({ suggestions, suggestionIndex, query, type, onSuggestionClick, trapFocus }) => (
   <div className="react-dadata__suggestions">
     <div className="react-dadata__suggestion-note">Выберите вариант или продолжите ввод</div>
     {suggestions.map(({ value, data }, index) => (
@@ -39,9 +39,11 @@ const SuggestionsList = ({ suggestions, suggestionIndex, query, type, onSuggesti
         key={value + index}
         onMouseDown={e => {
           onSuggestionClick(index);
-          e.preventDefault();
-          e.stopPropagation();
-          return false;
+          if (trapFocus) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }
         }}
         className={`react-dadata__suggestion ${index === suggestionIndex && 'react-dadata__suggestion--current'}`}
         data-suggestion-status={(data && data.state && data.state.status) || ''}
@@ -93,10 +95,6 @@ class ReactDadata extends React.Component {
 
   onInputFocus = event => {
     this.setState({ inputFocused: true });
-
-    this.textInput.selectionStart = this.textInput.value.length;
-    this.textInput.selectionEnd = this.textInput.value.length;
-
     this.props.onFocus && this.props.onFocus(event);
   };
 
@@ -230,7 +228,6 @@ class ReactDadata extends React.Component {
   };
 
   onSuggestionClick = index => {
-    this.textInput && this.textInput.focus();
     this.selectSuggestion(index);
   };
 
@@ -296,10 +293,21 @@ class ReactDadata extends React.Component {
 
   render() {
     const { suggestionIndex, query, inputFocused, suggestions, showSuggestions, type } = this.state;
-    const { placeholder, autocomplete, styles, allowClear, className, name, label, disableSuggest, customInput } = this.props;
+    const {
+      placeholder,
+      autocomplete,
+      styles,
+      allowClear,
+      className,
+      name,
+      label,
+      disableSuggest,
+      customInput,
+      trapFocus
+    } = this.props;
 
     const showSuggestionsList = inputFocused && !disableSuggest && showSuggestions && !!suggestions.length;
-    const Component = customInput || 'input'
+    const Component = customInput || 'input';
 
     return (
       <div className={`react-dadata react-dadata__container ${className}`} style={styles}>
@@ -329,6 +337,7 @@ class ReactDadata extends React.Component {
             query={query}
             type={type}
             onSuggestionClick={this.onSuggestionClick}
+            trapFocus={trapFocus}
           />
         )}
         {label && (
@@ -369,7 +378,8 @@ ReactDadata.propTypes = {
   baseUrl: PropTypes.string,
   disableSuggest: PropTypes.bool,
   queryModifier: PropTypes.func,
-  customInput: PropTypes.func
+  customInput: PropTypes.func,
+  trapFocus: PropTypes.bool
 };
 
 ReactDadata.defaultProps = {
@@ -378,7 +388,8 @@ ReactDadata.defaultProps = {
   fetchOnMount: false,
   mode: 'standard',
   baseUrl: DEFAULT_API_URI,
-  disableSuggest: false
+  disableSuggest: false,
+  trapFocus: false
 };
 
 export default ReactDadata;

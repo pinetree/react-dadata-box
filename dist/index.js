@@ -74,7 +74,8 @@ var SuggestionsList = function SuggestionsList(_ref2) {
       suggestionIndex = _ref2.suggestionIndex,
       query = _ref2.query,
       type = _ref2.type,
-      onSuggestionClick = _ref2.onSuggestionClick;
+      onSuggestionClick = _ref2.onSuggestionClick,
+      trapFocus = _ref2.trapFocus;
   return React.createElement("div", {
     className: "react-dadata__suggestions"
   }, React.createElement("div", {
@@ -86,9 +87,12 @@ var SuggestionsList = function SuggestionsList(_ref2) {
       key: value + index,
       onMouseDown: function onMouseDown(e) {
         onSuggestionClick(index);
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
+
+        if (trapFocus) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
       },
       className: "react-dadata__suggestion ".concat(index === suggestionIndex && 'react-dadata__suggestion--current'),
       "data-suggestion-status": data && data.state && data.state.status || ''
@@ -157,8 +161,6 @@ function (_React$Component) {
         inputFocused: true
       });
 
-      _this.textInput.selectionStart = _this.textInput.value.length;
-      _this.textInput.selectionEnd = _this.textInput.value.length;
       _this.props.onFocus && _this.props.onFocus(event);
     });
 
@@ -334,8 +336,6 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "onSuggestionClick", function (index) {
-      _this.textInput && _this.textInput.focus();
-
       _this.selectSuggestion(index);
     });
 
@@ -434,7 +434,8 @@ function (_React$Component) {
           name = _this$props3.name,
           label = _this$props3.label,
           disableSuggest = _this$props3.disableSuggest,
-          customInput = _this$props3.customInput;
+          customInput = _this$props3.customInput,
+          trapFocus = _this$props3.trapFocus;
       var showSuggestionsList = inputFocused && !disableSuggest && showSuggestions && !!suggestions.length;
       var Component = customInput || 'input';
       return React.createElement("div", {
@@ -463,7 +464,8 @@ function (_React$Component) {
         suggestionIndex: suggestionIndex,
         query: query,
         type: type,
-        onSuggestionClick: this.onSuggestionClick
+        onSuggestionClick: this.onSuggestionClick,
+        trapFocus: trapFocus
       }), label && React.createElement("label", {
         className: "react-dadata__label",
         htmlFor: name
@@ -502,7 +504,8 @@ ReactDadata.propTypes = {
   baseUrl: _propTypes["default"].string,
   disableSuggest: _propTypes["default"].bool,
   queryModifier: _propTypes["default"].func,
-  customInput: _propTypes["default"].func
+  customInput: _propTypes["default"].func,
+  trapFocus: _propTypes["default"].bool
 };
 ReactDadata.defaultProps = {
   clearOnBlur: false,
@@ -510,7 +513,8 @@ ReactDadata.defaultProps = {
   fetchOnMount: false,
   mode: 'standard',
   baseUrl: DEFAULT_API_URI,
-  disableSuggest: false
+  disableSuggest: false,
+  trapFocus: false
 };
 var _default = ReactDadata;
 exports["default"] = _default;
