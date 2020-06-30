@@ -90,6 +90,10 @@ class ReactDadata extends React.Component {
 
   onInputFocus = event => {
     this.setState({ inputFocused: true });
+
+    this.textInput.current.selectionStart = this.textInput.current.value.length;
+    this.textInput.current.selectionEnd = this.textInput.current.value.length;
+
     this.props.onFocus && this.props.onFocus(event);
   };
 
