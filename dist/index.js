@@ -154,6 +154,8 @@ function (_React$Component) {
         inputFocused: true
       });
 
+      _this.textInput.current.selectionStart = _this.textInput.current.value.length;
+      _this.textInput.current.selectionEnd = _this.textInput.current.value.length;
       _this.props.onFocus && _this.props.onFocus(event);
     });
 
@@ -329,6 +331,8 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "onSuggestionClick", function (index) {
+      _this.textInput.current && _this.textInput.current.focus();
+
       _this.selectSuggestion(index);
     });
 
