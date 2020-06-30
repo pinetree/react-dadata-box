@@ -37,8 +37,11 @@ const SuggestionsList = ({ suggestions, suggestionIndex, query, type, onSuggesti
     {suggestions.map(({ value, data }, index) => (
       <div
         key={value + index}
-        onMouseDown={() => {
+        onMouseDown={e => {
           onSuggestionClick(index);
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
         }}
         className={`react-dadata__suggestion ${index === suggestionIndex && 'react-dadata__suggestion--current'}`}
         data-suggestion-status={(data && data.state && data.state.status) || ''}
@@ -91,8 +94,8 @@ class ReactDadata extends React.Component {
   onInputFocus = event => {
     this.setState({ inputFocused: true });
 
-    this.textInput.current.selectionStart = this.textInput.current.value.length;
-    this.textInput.current.selectionEnd = this.textInput.current.value.length;
+    this.textInput.selectionStart = this.textInput.value.length;
+    this.textInput.selectionEnd = this.textInput.value.length;
 
     this.props.onFocus && this.props.onFocus(event);
   };
@@ -227,7 +230,7 @@ class ReactDadata extends React.Component {
   };
 
   onSuggestionClick = index => {
-    this.textInput.current && this.textInput.current.focus();
+    this.textInput && this.textInput.focus();
     this.selectSuggestion(index);
   };
 

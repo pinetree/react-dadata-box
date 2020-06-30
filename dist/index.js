@@ -84,8 +84,11 @@ var SuggestionsList = function SuggestionsList(_ref2) {
         data = _ref3.data;
     return React.createElement("div", {
       key: value + index,
-      onMouseDown: function onMouseDown() {
+      onMouseDown: function onMouseDown(e) {
         onSuggestionClick(index);
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
       },
       className: "react-dadata__suggestion ".concat(index === suggestionIndex && 'react-dadata__suggestion--current'),
       "data-suggestion-status": data && data.state && data.state.status || ''
@@ -154,8 +157,8 @@ function (_React$Component) {
         inputFocused: true
       });
 
-      _this.textInput.current.selectionStart = _this.textInput.current.value.length;
-      _this.textInput.current.selectionEnd = _this.textInput.current.value.length;
+      _this.textInput.selectionStart = _this.textInput.value.length;
+      _this.textInput.selectionEnd = _this.textInput.value.length;
       _this.props.onFocus && _this.props.onFocus(event);
     });
 
@@ -331,7 +334,7 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "onSuggestionClick", function (index) {
-      _this.textInput.current && _this.textInput.current.focus();
+      _this.textInput && _this.textInput.focus();
 
       _this.selectSuggestion(index);
     });
